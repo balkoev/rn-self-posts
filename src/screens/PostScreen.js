@@ -8,6 +8,8 @@ import {
   ScrollView,
   Alert,
 } from 'react-native';
+import { AppHeaderIcon } from '../components/AppHeaderIcon';
+import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { THEME } from '../theme';
 import { DATA } from '../data';
 
@@ -15,11 +17,11 @@ export const PostScreen = ({ navigation, route }) => {
   const postId = route.params.postId;
   const date = route.params.date;
 
+  const post = DATA.find((p) => p.id === postId);
+
   navigation.setOptions({
     title: 'Пост от ' + new Date(date).toLocaleDateString(),
   });
-
-  const post = DATA.find((p) => p.id === postId);
 
   const removeHandler = () => {
     Alert.alert(
@@ -53,6 +55,22 @@ export const PostScreen = ({ navigation, route }) => {
       />
     </ScrollView>
   );
+};
+
+PostScreen.navigationOptions = ({ route }) => {
+  const iconName = route.params.booked ? 'ios-star' : 'ios-star-outline';
+
+  return {
+    headerRight: () => (
+      <HeaderButtons HeaderButtonComponent={AppHeaderIcon}>
+        <Item
+          title="Take photo"
+          iconName={iconName}
+          onPress={() => console.log('press')}
+        />
+      </HeaderButtons>
+    ),
+  };
 };
 
 const styles = StyleSheet.create({

@@ -1,18 +1,20 @@
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { HeaderButtons, Item } from 'react-navigation-header-buttons';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Platform } from 'react-native';
 import { MainScreen } from '../screens/MainScreen';
 import { PostScreen } from '../screens/PostScreen';
+import { BookedScreen } from '../screens/BookedScreen';
 import { THEME } from '../theme';
-import { AppHeaderIcon } from '../components/AppHeaderIcon';
+import { Ionicons } from '@expo/vector-icons';
+// import Ionicons from 'react-native-vector-icons/Ionicons';
 
-const Stack = createStackNavigator();
+const MainStack = createStackNavigator();
 
-export const AppNavigation = () => (
-  <NavigationContainer>
-    <Stack.Navigator
+function MainStackScreen() {
+  return (
+    <MainStack.Navigator
       initialRouteName="Main"
       screenOptions={{
         headerStyle: {
@@ -22,28 +24,49 @@ export const AppNavigation = () => (
         headerTintColor: Platform.OS === 'android' ? '#fff' : THEME.MAIN_COLOR,
       }}
     >
-      <Stack.Screen
+      <MainStack.Screen
         name="Main"
         component={MainScreen}
-        options={{
-          headerShown: true,
-          headerRight: () => (
-            <HeaderButtons HeaderButtonComponent={AppHeaderIcon}>
-              <Item
-                title="Take photo"
-                iconName="ios-camera"
-                onPress={() => console.log('press')}
-              />
-              <Item
-                title="Take photo 2"
-                iconName="ios-reverse-camera"
-                onPress={() => console.log('press')}
-              />
-            </HeaderButtons>
-          ),
-        }}
+        options={MainScreen.navigationOptions}
       />
-      <Stack.Screen name="Post" component={PostScreen} />
-    </Stack.Navigator>
-  </NavigationContainer>
-);
+      <MainStack.Screen
+        name="Post"
+        component={PostScreen}
+        options={PostScreen.navigationOptions}
+      />
+    </MainStack.Navigator>
+  );
+}
+
+const Tab = createBottomTabNavigator();
+
+export const AppNavigation = () => {
+  return (
+    <NavigationContainer>
+      <Tab.Navigator
+        initialRouteName="Main"
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused, color, size }) => {
+            let iconName;
+
+            if (route.name === 'Main') {
+              iconName = focused ? 'ios-albums' : 'ios-albums';
+            } else if (route.name === 'Booked') {
+              iconName = focused ? 'ios-star' : 'ios-star-outline';
+            }
+
+            // You can return any component that you like here!
+            return <Ionicons name={iconName} size={size} color={color} />;
+          },
+        })}
+        tabBarOptions={{
+          activeTintColor: THEME.MAIN_COLOR,
+          inactiveTintColor: 'gray',
+        }}
+      >
+        <Tab.Screen name="Main" component={MainStackScreen} />
+        <Tab.Screen name="Booked" component={BookedScreen} />
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
+};
