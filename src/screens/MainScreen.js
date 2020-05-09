@@ -16,7 +16,7 @@ export const MainScreen = ({ navigation }) => {
   return <PostList data={DATA} onOpen={openPostHandler} />;
 };
 
-MainScreen.navigationOptions = {
+MainScreen.navigationOptions = ({ navigation }) => ({
   headerTitle: 'Мой блог',
   headerShown: true,
   headerRight: () => (
@@ -38,8 +38,8 @@ MainScreen.navigationOptions = {
       <Item
         title="Toogle Drawer"
         iconName="ios-menu"
-        onPress={() => console.log('press')}
+        onPress={() => navigation.toggleDrawer()}
       />
     </HeaderButtons>
   ),
-};
+});
