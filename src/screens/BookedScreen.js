@@ -1,5 +1,5 @@
 import React from 'react';
-import { DATA } from '../data';
+import { useSelector } from 'react-redux';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { AppHeaderIcon } from '../components/AppHeaderIcon';
 import { PostList } from '../components/PostList';
@@ -13,12 +13,9 @@ export const BookedScreen = ({ navigation }) => {
     });
   };
 
-  return (
-    <PostList
-      data={DATA.filter((post) => post.booked)}
-      onOpen={openPostHandler}
-    />
-  );
+  const bookedPosts = useSelector((state) => state.post.bookedPosts);
+
+  return <PostList data={bookedPosts} onOpen={openPostHandler} />;
 };
 
 BookedScreen.navigationOptions = {
@@ -29,7 +26,7 @@ BookedScreen.navigationOptions = {
       <Item
         title="Toogle Drawer"
         iconName="ios-menu"
-        onPress={() => console.log('press')}
+        onPress={() => navigation.toggleDrawer()}
       />
     </HeaderButtons>
   ),

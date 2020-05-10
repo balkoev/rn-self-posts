@@ -10,9 +10,9 @@ export const CreateNavigation = () => {
   return (
     <CreateNavigator.Navigator screenOptions={screenDefaultOptions}>
       <CreateNavigator.Screen
-        name="Новый пост "
+        name="CreateScreen"
         component={CreateScreen}
-        // options={CreateScreen.navigationOptions}
+        options={CreateScreen.navigationOptions}
       />
     </CreateNavigator.Navigator>
   );

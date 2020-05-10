@@ -10,9 +10,9 @@ export const AboutNavigation = () => {
   return (
     <AboutNavigator.Navigator screenOptions={screenDefaultOptions}>
       <AboutNavigator.Screen
-        name="О приложении "
+        name="AboutScreen"
         component={AboutScreen}
-        // options={AboutScreen.navigationOptions}
+        options={AboutScreen.navigationOptions}
       />
     </AboutNavigator.Navigator>
   );
