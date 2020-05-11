@@ -18,7 +18,7 @@ export const BookedScreen = ({ navigation }) => {
   return <PostList data={bookedPosts} onOpen={openPostHandler} />;
 };
 
-BookedScreen.navigationOptions = {
+BookedScreen.navigationOptions = ({ navigation }) => ({
   headerTitle: 'Избранное',
   headerShown: true,
   headerLeft: () => (
@@ -30,4 +30,4 @@ BookedScreen.navigationOptions = {
       />
     </HeaderButtons>
   ),
-};
+});

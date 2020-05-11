@@ -35,11 +35,6 @@ MainScreen.navigationOptions = ({ navigation }) => ({
         iconName="ios-camera"
         onPress={() => navigation.navigate('CreateScreen')}
       />
-      <Item
-        title="Take photo 2"
-        iconName="ios-reverse-camera"
-        onPress={() => console.log('press1')}
-      />
     </HeaderButtons>
   ),
   headerLeft: () => (

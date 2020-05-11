@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useCallback } from 'react';
 import {
   View,
   Text,
@@ -8,20 +8,35 @@ import {
   ScrollView,
   Alert,
 } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 import { AppHeaderIcon } from '../components/AppHeaderIcon';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { THEME } from '../theme';
-import { DATA } from '../data';
+import { toggleBooked, removePost } from '../store/actions/post';
 
 export const PostScreen = ({ navigation, route }) => {
+  const dispatch = useDispatch();
   const postId = route.params.postId;
-  const date = route.params.date;
 
-  const post = DATA.find((p) => p.id === postId);
+  const post = useSelector((state) =>
+    state.post.allPosts.find((p) => p.id === postId)
+  );
 
-  navigation.setOptions({
-    title: 'Пост от ' + new Date(date).toLocaleDateString(),
-  });
+  const toggleHandler = useCallback(() => {
+    dispatch(toggleBooked(postId));
+  }, [dispatch, postId]);
+
+  useEffect(() => {
+    navigation.setParams({ toggleHandler });
+  }, [toggleHandler]);
+
+  const booked = useSelector((state) =>
+    state.post.bookedPosts.some((post) => post.id === postId)
+  );
+
+  useEffect(() => {
+    navigation.setParams({ booked });
+  }, [booked]);
 
   const removeHandler = () => {
     Alert.alert(
@@ -35,12 +50,19 @@ export const PostScreen = ({ navigation, route }) => {
         {
           text: 'Удалить',
           style: 'destuctive',
-          onPress: () => console.log('OK Pressed'),
+          onPress: () => {
+            navigation.navigate('Main');
+            dispatch(removePost(postId));
+          },
         },
       ],
       { cancelable: false }
     );
   };
+
+  if (!post) {
+    return null;
+  }
 
   return (
     <ScrollView>
@@ -59,15 +81,14 @@ export const PostScreen = ({ navigation, route }) => {
 
 PostScreen.navigationOptions = ({ route }) => {
   const iconName = route.params.booked ? 'ios-star' : 'ios-star-outline';
+  const date = route.params.date;
+  const toggleHandler = route.params.toggleHandler;
 
   return {
+    title: 'Пост от ' + new Date(date).toLocaleDateString(),
     headerRight: () => (
       <HeaderButtons HeaderButtonComponent={AppHeaderIcon}>
-        <Item
-          title="Take photo"
-          iconName={iconName}
-          onPress={() => console.log('press')}
-        />
+        <Item title="Add to Book" iconName={iconName} onPress={toggleHandler} />
       </HeaderButtons>
     ),
   };
